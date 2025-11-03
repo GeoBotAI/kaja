@@ -1,0 +1,1078 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 5 Kaja - Phonics Practice</title>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100%;
+            color: #2d3748;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #4a5568;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #718096;
+        }
+
+        .language-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .language-toggle:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+
+        .main-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .activity-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+
+        .activity-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: #4299e1;
+        }
+
+        .activity-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .activity-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+
+        .activity-description {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .flashcard-container {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .flashcard {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 20px;
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 20px 0;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .word-flashcard {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            font-size: 3rem;
+        }
+
+        .sentence-flashcard {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            font-size: 1.8rem;
+            line-height: 1.4;
+            padding: 40px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .btn-primary {
+            background: #4299e1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: #ed8936;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #dd6b20;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #a0aec0;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #718096;
+            transform: translateY(-2px);
+        }
+
+        .progress-bar {
+            background: #e2e8f0;
+            height: 10px;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #4299e1, #48bb78);
+            height: 100%;
+            transition: width 0.3s ease;
+            border-radius: 5px;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #4a5568;
+        }
+
+        .writing-area {
+            background: #f7fafc;
+            border: 2px dashed #cbd5e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 100px;
+            font-size: 1.2rem;
+        }
+
+        .writing-input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-size: 1.2rem;
+            font-family: inherit;
+            outline: none;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .feedback-area {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 1.1rem;
+        }
+
+        .feedback-correct {
+            background: #f0fff4;
+            border-color: #48bb78;
+            color: #2f855a;
+        }
+
+        .feedback-incorrect {
+            background: #fff5f5;
+            border-color: #fc8181;
+            color: #c53030;
+        }
+
+        .feedback-content {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .comparison-text {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .original-sentence {
+            background: #e6fffa;
+            border: 1px solid #4fd1c7;
+        }
+
+        .child-sentence {
+            background: #fef5e7;
+            border: 1px solid #f6ad55;
+        }
+
+        .difficulty-folder {
+            background: #fed7d7;
+            border: 2px solid #fc8181;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .difficulty-title {
+            font-weight: bold;
+            color: #c53030;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .difficulty-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .difficulty-item {
+            background: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #fc8181;
+            color: #c53030;
+            font-weight: bold;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .session-progress {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .title {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .language-toggle {
+                top: 10px;
+                right: 10px;
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+            
+            .main-menu {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .activity-card {
+                padding: 20px;
+            }
+            
+            .activity-icon {
+                font-size: 2.5rem;
+            }
+            
+            .activity-title {
+                font-size: 1.2rem;
+            }
+            
+            .activity-description {
+                font-size: 0.85rem;
+            }
+            
+            .flashcard-container {
+                padding: 15px;
+            }
+            
+            .flashcard {
+                font-size: 2rem;
+                padding: 30px 15px;
+                min-height: 150px;
+                margin: 15px 0;
+            }
+            
+            .word-flashcard {
+                font-size: 2.2rem;
+            }
+            
+            .sentence-flashcard {
+                font-size: 1.3rem;
+                padding: 25px 15px;
+                line-height: 1.3;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 280px;
+                padding: 15px 20px;
+                font-size: 1.1rem;
+                min-height: 50px;
+                touch-action: manipulation;
+            }
+            
+            .writing-area {
+                padding: 15px;
+                margin: 15px 0;
+            }
+            
+            .writing-input {
+                font-size: 1.1rem;
+                min-height: 100px;
+                padding: 10px;
+            }
+            
+            .feedback-area {
+                padding: 15px;
+                margin: 15px 0;
+                font-size: 1rem;
+            }
+            
+            .comparison-text {
+                margin: 10px 0;
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+            
+            .progress-text {
+                font-size: 0.9rem;
+            }
+            
+            .session-progress {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .difficulty-folder {
+                padding: 15px;
+                margin: 15px 0;
+            }
+            
+            .difficulty-items {
+                gap: 8px;
+            }
+            
+            .difficulty-item {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .title {
+                font-size: 1.5rem;
+            }
+            
+            .flashcard {
+                font-size: 1.6rem;
+                padding: 25px 10px;
+                min-height: 120px;
+            }
+            
+            .word-flashcard {
+                font-size: 1.8rem;
+            }
+            
+            .sentence-flashcard {
+                font-size: 1.1rem;
+                padding: 20px 10px;
+            }
+            
+            .btn {
+                padding: 12px 16px;
+                font-size: 1rem;
+                min-height: 45px;
+            }
+        }
+        
+        /* Touch-friendly improvements */
+        .btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .activity-card:active {
+            transform: translateY(-2px);
+        }
+        
+        /* Prevent text selection on touch */
+        .flashcard, .btn, .activity-card {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* Allow text selection in input areas */
+        .writing-input, .feedback-area {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body><button class="language-toggle" onclick="toggleLanguage()">🌐 English</button>
+  <div class="container">
+   <header class="header">
+    <h1 class="title" id="appTitle">Phase 5 Kaja</h1>
+    <p class="subtitle" id="welcomeMessage">Welcome to phonics practice!</p>
+   </header>
+   <div id="mainMenu" class="main-menu">
+    <div class="activity-card" onclick="startActivity('sounds')">
+     <div class="activity-icon">
+      🔤
+     </div>
+     <h3 class="activity-title" data-en="Sound Flashcards" data-pl="Karty Dźwięków">Sound Flashcards</h3>
+     <p class="activity-description" data-en="Practice 20 random phonics sounds" data-pl="Ćwicz 20 losowych dźwięków fonetycznych">Practice 20 random phonics sounds</p>
+    </div>
+    <div class="activity-card" onclick="startActivity('words')">
+     <div class="activity-icon">
+      📝
+     </div>
+     <h3 class="activity-title" data-en="Word Flashcards" data-pl="Karty Słów">Word Flashcards</h3>
+     <p class="activity-description" data-en="Read words with focus sounds" data-pl="Czytaj słowa z głównymi dźwiękami">Read words with focus sounds</p>
+    </div>
+    <div class="activity-card" onclick="startActivity('reading')">
+     <div class="activity-icon">
+      📖
+     </div>
+     <h3 class="activity-title" data-en="Sentence Reading" data-pl="Czytanie Zdań">Sentence Reading</h3>
+     <p class="activity-description" data-en="Read 3 sentences with practice words" data-pl="Czytaj 3 zdania ze słowami ćwiczeniowymi">Read 3 sentences with practice words</p>
+    </div>
+    <div class="activity-card" onclick="startActivity('writing')">
+     <div class="activity-icon">
+      ✏️
+     </div>
+     <h3 class="activity-title" data-en="Sentence Writing" data-pl="Pisanie Zdań">Sentence Writing</h3>
+     <p class="activity-description" data-en="Write 3 sentences from memory" data-pl="Pisz 3 zdania z pamięci">Write 3 sentences from memory</p>
+    </div>
+    <div class="activity-card" onclick="startFullSession()">
+     <div class="activity-icon">
+      🎯
+     </div>
+     <h3 class="activity-title" data-en="Full Session" data-pl="Pełna Sesja">Full Session</h3>
+     <p class="activity-description" data-en="Complete phonics practice session" data-pl="Kompletna sesja ćwiczeń fonetycznych">Complete phonics practice session</p>
+    </div>
+    <div class="activity-card" onclick="showDifficulties()">
+     <div class="activity-icon">
+      📁
+     </div>
+     <h3 class="activity-title" data-en="Practice Folder" data-pl="Folder Ćwiczeń">Practice Folder</h3>
+     <p class="activity-description" data-en="Review difficult sounds and words" data-pl="Przejrzyj trudne dźwięki i słowa">Review difficult sounds and words</p>
+    </div>
+   </div>
+   <div id="activityContainer" class="flashcard-container">
+    <div class="session-progress" id="sessionProgress" style="display: none;">
+     <h3 data-en="Session Progress" data-pl="Postęp Sesji">Session Progress</h3>
+     <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+     </div>
+     <div class="progress-text" id="progressText">
+      0 / 4 activities completed
+     </div>
+    </div>
+    <h2 id="activityTitle"></h2>
+    <div class="progress-bar">
+     <div class="progress-fill" id="activityProgress"></div>
+    </div>
+    <div class="progress-text" id="activityProgressText">
+     1 / 20
+    </div>
+    <div class="flashcard" id="flashcard"></div>
+    <div class="writing-area hidden" id="writingArea"><textarea class="writing-input" id="writingInput" placeholder="Write the sentence here..."></textarea>
+    </div>
+    <div class="feedback-area hidden" id="feedbackArea">
+     <div class="feedback-content" id="feedbackContent"></div>
+    </div>
+    <div class="controls"><button class="btn btn-success" onclick="markCorrect()" id="correctBtn" data-en="Correct ✓" data-pl="Poprawne ✓">Correct ✓</button> <button class="btn btn-warning" onclick="markDifficult()" id="difficultBtn" data-en="Difficult ?" data-pl="Trudne ?">Difficult ?</button> <button class="btn btn-primary" onclick="nextCard()" id="nextBtn" data-en="Next →" data-pl="Dalej →">Next →</button> <button class="btn btn-secondary" onclick="showSentence()" id="showBtn" data-en="Show Sentence" data-pl="Pokaż Zdanie" style="display: none;">Show Sentence</button> <button class="btn btn-secondary" onclick="hideSentence()" id="hideBtn" data-en="Hide &amp; Write" data-pl="Ukryj i Pisz" style="display: none;">Hide &amp; Write</button> <button class="btn btn-primary" onclick="checkWriting()" id="checkBtn" data-en="Check My Writing" data-pl="Sprawdź Moje Pisanie" style="display: none;">Check My Writing</button>
+    </div>
+    <div class="controls"><button class="btn btn-secondary" onclick="backToMenu()" data-en="← Back to Menu" data-pl="← Powrót do Menu">← Back to Menu</button>
+    </div>
+   </div>
+   <div id="difficultiesContainer" class="flashcard-container">
+    <h2 data-en="Practice Folder - Difficult Items" data-pl="Folder Ćwiczeń - Trudne Elementy">Practice Folder - Difficult Items</h2>
+    <div id="difficultiesList"></div>
+    <div class="controls"><button class="btn btn-primary" onclick="practiceDifficulties()" data-en="Practice These" data-pl="Ćwicz Te">Practice These</button> <button class="btn btn-secondary" onclick="backToMenu()" data-en="← Back to Menu" data-pl="← Powrót do Menu">← Back to Menu</button>
+    </div>
+   </div>
+  </div>
+  <script>
+        // Phonics data
+        const phonicsData = {
+            ay: { word: 'play', sentence: 'I like to play in the rain.' },
+            ai: { word: 'rain', sentence: 'The rain is falling.' },
+            'a (paper)': { word: 'paper', sentence: 'The paper is white.' },
+            'a-e': { word: 'shake', sentence: 'Shake the bottle.' },
+            eigh: { word: 'eight', sentence: 'There are eight apples.' },
+            ee: { word: 'see', sentence: 'I can see the moon.' },
+            ea: { word: 'each', sentence: 'Each child has a book.' },
+            'e (he)': { word: 'he', sentence: 'He is kind.' },
+            'e-e': { word: 'these', sentence: 'These shoes are new.' },
+            ie: { word: 'shield', sentence: 'The knight has a shield.' },
+            'y (funny)': { word: 'funny', sentence: 'The clown is funny.' },
+            ey: { word: 'donkey', sentence: 'The donkey is very funny.' },
+            igh: { word: 'night', sentence: 'The stars shine at night.' },
+            'ie (pie)': { word: 'pie', sentence: 'The pie smells good.' },
+            'i (tiger)': { word: 'tiger', sentence: 'The tiger is strong.' },
+            'i-e': { word: 'time', sentence: 'It is time to go.' },
+            'y (fly)': { word: 'fly', sentence: 'The fly is in the sky.' },
+            oa: { word: 'boat', sentence: 'The boat is on the sea.' },
+            'o (go)': { word: 'go', sentence: 'Go to the park.' },
+            'o-e': { word: 'home', sentence: 'I am going home.' },
+            ou: { word: 'shoulder', sentence: 'My shoulder hurts.' },
+            oe: { word: 'toe', sentence: 'I hurt my toe.' },
+            ow: { word: 'snow', sentence: 'The snow is cold.' }
+        };
+
+        // App state
+        let currentLanguage = 'en';
+        let currentActivity = '';
+        let currentCards = [];
+        let currentIndex = 0;
+        let isFullSession = false;
+        let sessionActivities = ['sounds', 'words', 'reading', 'writing'];
+        let currentSessionActivity = 0;
+        let writingMode = false;
+        let currentSentence = '';
+        let difficultItems = [];
+
+        // Default config for Element SDK
+        const defaultConfig = {
+            app_title: "Phase 5 Kaja",
+            welcome_message: "Welcome to phonics practice!"
+        };
+
+        // Data SDK handler
+        const dataHandler = {
+            onDataChanged(data) {
+                // Update difficult items from stored data
+                difficultItems = data.filter(item => item.type === 'difficult');
+                updateDifficultiesDisplay();
+            }
+        };
+
+        // Element SDK functions
+        async function onConfigChange(config) {
+            const title = config.app_title || defaultConfig.app_title;
+            const message = config.welcome_message || defaultConfig.welcome_message;
+            
+            document.getElementById('appTitle').textContent = title;
+            document.getElementById('welcomeMessage').textContent = message;
+        }
+
+        function mapToCapabilities(config) {
+            return {
+                recolorables: [],
+                borderables: [],
+                fontEditable: undefined,
+                fontSizeable: undefined
+            };
+        }
+
+        function mapToEditPanelValues(config) {
+            return new Map([
+                ["app_title", config.app_title || defaultConfig.app_title],
+                ["welcome_message", config.welcome_message || defaultConfig.welcome_message]
+            ]);
+        }
+
+        // Initialize SDKs
+        async function initializeApp() {
+            if (window.elementSdk) {
+                await window.elementSdk.init({
+                    defaultConfig,
+                    onConfigChange,
+                    mapToCapabilities,
+                    mapToEditPanelValues
+                });
+            }
+
+            if (window.dataSdk) {
+                const result = await window.dataSdk.init(dataHandler);
+                if (!result.isOk) {
+                    console.error("Failed to initialize data SDK");
+                }
+            }
+        }
+
+        // Language functions
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'pl' : 'en';
+            updateLanguageDisplay();
+        }
+
+        function updateLanguageDisplay() {
+            const toggle = document.querySelector('.language-toggle');
+            toggle.textContent = currentLanguage === 'en' ? '🌐 English' : '🌐 Polski';
+            
+            document.querySelectorAll('[data-en]').forEach(element => {
+                const text = currentLanguage === 'en' ? element.getAttribute('data-en') : element.getAttribute('data-pl');
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+        }
+
+        // Activity functions
+        function startActivity(type) {
+            currentActivity = type;
+            isFullSession = false;
+            currentSessionActivity = 0;
+            setupActivity(type);
+            showActivity();
+        }
+
+        function startFullSession() {
+            isFullSession = true;
+            currentSessionActivity = 0;
+            document.getElementById('sessionProgress').style.display = 'block';
+            updateSessionProgress();
+            setupActivity(sessionActivities[0]);
+            showActivity();
+        }
+
+        function setupActivity(type) {
+            currentActivity = type;
+            currentIndex = 0;
+            
+            const sounds = Object.keys(phonicsData);
+            const shuffled = [...sounds].sort(() => Math.random() - 0.5);
+            
+            switch(type) {
+                case 'sounds':
+                    currentCards = shuffled.slice(0, 20);
+                    document.getElementById('activityTitle').textContent = 
+                        currentLanguage === 'en' ? 'Sound Flashcards' : 'Karty Dźwięków';
+                    break;
+                case 'words':
+                    currentCards = shuffled.slice(0, 20).map(sound => phonicsData[sound].word);
+                    document.getElementById('activityTitle').textContent = 
+                        currentLanguage === 'en' ? 'Word Flashcards' : 'Karty Słów';
+                    break;
+                case 'reading':
+                    currentCards = shuffled.slice(0, 3).map(sound => phonicsData[sound].sentence);
+                    document.getElementById('activityTitle').textContent = 
+                        currentLanguage === 'en' ? 'Sentence Reading' : 'Czytanie Zdań';
+                    break;
+                case 'writing':
+                    currentCards = shuffled.slice(0, 3).map(sound => phonicsData[sound].sentence);
+                    document.getElementById('activityTitle').textContent = 
+                        currentLanguage === 'en' ? 'Sentence Writing' : 'Pisanie Zdań';
+                    setupWritingMode();
+                    break;
+            }
+            
+            updateCard();
+            updateProgress();
+        }
+
+        function setupWritingMode() {
+            writingMode = false;
+            document.getElementById('showBtn').style.display = 'inline-block';
+            document.getElementById('hideBtn').style.display = 'none';
+            document.getElementById('writingArea').classList.add('hidden');
+            document.getElementById('correctBtn').style.display = 'none';
+            document.getElementById('difficultBtn').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('checkBtn').style.display = 'none';
+            document.getElementById('feedbackArea').classList.add('hidden');
+        }
+
+        function showActivity() {
+            document.getElementById('mainMenu').style.display = 'none';
+            document.getElementById('activityContainer').style.display = 'block';
+            document.getElementById('difficultiesContainer').style.display = 'none';
+        }
+
+        function updateCard() {
+            const flashcard = document.getElementById('flashcard');
+            const current = currentCards[currentIndex];
+            
+            flashcard.textContent = current;
+            flashcard.className = 'flashcard';
+            
+            if (currentActivity === 'words') {
+                flashcard.classList.add('word-flashcard');
+            } else if (currentActivity === 'reading' || currentActivity === 'writing') {
+                flashcard.classList.add('sentence-flashcard');
+            }
+            
+            if (currentActivity === 'writing' && writingMode) {
+                flashcard.classList.add('hidden');
+                document.getElementById('writingArea').classList.remove('hidden');
+            } else {
+                flashcard.classList.remove('hidden');
+                document.getElementById('writingArea').classList.add('hidden');
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentIndex + 1) / currentCards.length) * 100;
+            document.getElementById('activityProgress').style.width = progress + '%';
+            document.getElementById('activityProgressText').textContent = 
+                `${currentIndex + 1} / ${currentCards.length}`;
+        }
+
+        function updateSessionProgress() {
+            if (!isFullSession) return;
+            
+            const progress = (currentSessionActivity / sessionActivities.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = 
+                currentLanguage === 'en' ? 
+                `${currentSessionActivity} / ${sessionActivities.length} activities completed` :
+                `${currentSessionActivity} / ${sessionActivities.length} aktywności ukończone`;
+        }
+
+        async function markCorrect() {
+            nextCard();
+        }
+
+        async function markDifficult() {
+            const current = currentCards[currentIndex];
+            const difficultItem = {
+                id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+                type: 'difficult',
+                content: current,
+                difficulty: currentActivity,
+                timestamp: new Date().toISOString()
+            };
+            
+            if (window.dataSdk) {
+                const result = await window.dataSdk.create(difficultItem);
+                if (!result.isOk) {
+                    console.error("Failed to save difficult item");
+                }
+            }
+            
+            nextCard();
+        }
+
+        function nextCard() {
+            if (currentIndex < currentCards.length - 1) {
+                currentIndex++;
+                updateCard();
+                updateProgress();
+                
+                if (currentActivity === 'writing') {
+                    setupWritingMode();
+                }
+            } else {
+                // Activity completed
+                if (isFullSession && currentSessionActivity < sessionActivities.length - 1) {
+                    currentSessionActivity++;
+                    updateSessionProgress();
+                    setupActivity(sessionActivities[currentSessionActivity]);
+                } else {
+                    // All activities completed
+                    if (isFullSession) {
+                        currentSessionActivity = sessionActivities.length;
+                        updateSessionProgress();
+                    }
+                    showCompletionMessage();
+                }
+            }
+        }
+
+        function showSentence() {
+            writingMode = false;
+            currentSentence = currentCards[currentIndex];
+            updateCard();
+            document.getElementById('showBtn').style.display = 'none';
+            document.getElementById('hideBtn').style.display = 'inline-block';
+        }
+
+        function hideSentence() {
+            writingMode = true;
+            updateCard();
+            document.getElementById('hideBtn').style.display = 'none';
+            document.getElementById('checkBtn').style.display = 'inline-block';
+            document.getElementById('writingInput').value = '';
+            document.getElementById('feedbackArea').classList.add('hidden');
+        }
+
+        function checkWriting() {
+            const childText = document.getElementById('writingInput').value.trim();
+            const originalSentence = currentCards[currentIndex];
+            
+            if (!childText) {
+                showFeedback(false, currentLanguage === 'en' ? 
+                    'Please write something first!' : 
+                    'Proszę najpierw coś napisać!', originalSentence, childText);
+                return;
+            }
+            
+            // Normalize text for comparison (remove extra spaces, convert to lowercase, remove punctuation)
+            const normalizeText = (text) => {
+                return text.toLowerCase()
+                    .replace(/[.,!?;:]/g, '')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+            };
+            
+            const normalizedOriginal = normalizeText(originalSentence);
+            const normalizedChild = normalizeText(childText);
+            
+            const isCorrect = normalizedOriginal === normalizedChild;
+            
+            if (isCorrect) {
+                showFeedback(true, currentLanguage === 'en' ? 
+                    '🎉 Perfect! You wrote it correctly!' : 
+                    '🎉 Doskonale! Napisałeś to poprawnie!', originalSentence, childText);
+            } else {
+                showFeedback(false, currentLanguage === 'en' ? 
+                    '📝 Not quite right. Compare your writing with the original:' : 
+                    '📝 Nie całkiem dobrze. Porównaj swoje pisanie z oryginałem:', originalSentence, childText);
+            }
+            
+            // Show the correct/difficult buttons after checking
+            document.getElementById('correctBtn').style.display = 'inline-block';
+            document.getElementById('difficultBtn').style.display = 'inline-block';
+            document.getElementById('nextBtn').style.display = 'inline-block';
+            document.getElementById('checkBtn').style.display = 'none';
+        }
+
+        function showFeedback(isCorrect, message, originalSentence, childSentence) {
+            const feedbackArea = document.getElementById('feedbackArea');
+            const feedbackContent = document.getElementById('feedbackContent');
+            
+            feedbackArea.className = 'feedback-area';
+            if (isCorrect) {
+                feedbackArea.classList.add('feedback-correct');
+            } else {
+                feedbackArea.classList.add('feedback-incorrect');
+            }
+            
+            let content = `<div class="feedback-content">${message}</div>`;
+            
+            if (!isCorrect && childSentence) {
+                content += `
+                    <div class="comparison-text original-sentence">
+                        <strong>${currentLanguage === 'en' ? 'Original:' : 'Oryginał:'}</strong><br>
+                        "${originalSentence}"
+                    </div>
+                    <div class="comparison-text child-sentence">
+                        <strong>${currentLanguage === 'en' ? 'Your writing:' : 'Twoje pisanie:'}</strong><br>
+                        "${childSentence}"
+                    </div>
+                `;
+            }
+            
+            feedbackContent.innerHTML = content;
+            feedbackArea.classList.remove('hidden');
+        }
+
+        function showCompletionMessage() {
+            const flashcard = document.getElementById('flashcard');
+            flashcard.textContent = currentLanguage === 'en' ? 
+                '🎉 Great job! Activity completed!' : 
+                '🎉 Świetna robota! Aktywność ukończona!';
+            flashcard.className = 'flashcard';
+            
+            document.getElementById('correctBtn').style.display = 'none';
+            document.getElementById('difficultBtn').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('showBtn').style.display = 'none';
+            document.getElementById('hideBtn').style.display = 'none';
+            document.getElementById('checkBtn').style.display = 'none';
+            document.getElementById('feedbackArea').classList.add('hidden');
+        }
+
+        function showDifficulties() {
+            document.getElementById('mainMenu').style.display = 'none';
+            document.getElementById('activityContainer').style.display = 'none';
+            document.getElementById('difficultiesContainer').style.display = 'block';
+            updateDifficultiesDisplay();
+        }
+
+        function updateDifficultiesDisplay() {
+            const container = document.getElementById('difficultiesList');
+            container.innerHTML = '';
+            
+            if (difficultItems.length === 0) {
+                container.innerHTML = `<p>${currentLanguage === 'en' ? 'No difficult items yet. Great job!' : 'Brak trudnych elementów. Świetna robota!'}</p>`;
+                return;
+            }
+            
+            const grouped = {};
+            difficultItems.forEach(item => {
+                if (!grouped[item.difficulty]) {
+                    grouped[item.difficulty] = [];
+                }
+                grouped[item.difficulty].push(item.content);
+            });
+            
+            Object.keys(grouped).forEach(difficulty => {
+                const folder = document.createElement('div');
+                folder.className = 'difficulty-folder';
+                
+                const title = document.createElement('div');
+                title.className = 'difficulty-title';
+                title.textContent = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+                folder.appendChild(title);
+                
+                const items = document.createElement('div');
+                items.className = 'difficulty-items';
+                grouped[difficulty].forEach(content => {
+                    const item = document.createElement('div');
+                    item.className = 'difficulty-item';
+                    item.textContent = content;
+                    items.appendChild(item);
+                });
+                folder.appendChild(items);
+                
+                container.appendChild(folder);
+            });
+        }
+
+        function practiceDifficulties() {
+            if (difficultItems.length === 0) return;
+            
+            // Create a practice session with difficult items
+            currentCards = difficultItems.map(item => item.content);
+            currentActivity = 'review';
+            currentIndex = 0;
+            isFullSession = false;
+            
+            document.getElementById('activityTitle').textContent = 
+                currentLanguage === 'en' ? 'Practice Difficult Items' : 'Ćwicz Trudne Elementy';
+            
+            showActivity();
+            updateCard();
+            updateProgress();
+        }
+
+        function backToMenu() {
+            document.getElementById('mainMenu').style.display = 'grid';
+            document.getElementById('activityContainer').style.display = 'none';
+            document.getElementById('difficultiesContainer').style.display = 'none';
+            document.getElementById('sessionProgress').style.display = 'none';
+            
+            // Reset writing mode controls
+            document.getElementById('correctBtn').style.display = 'inline-block';
+            document.getElementById('difficultBtn').style.display = 'inline-block';
+            document.getElementById('nextBtn').style.display = 'inline-block';
+            document.getElementById('showBtn').style.display = 'none';
+            document.getElementById('hideBtn').style.display = 'none';
+            document.getElementById('checkBtn').style.display = 'none';
+            document.getElementById('writingArea').classList.add('hidden');
+            document.getElementById('feedbackArea').classList.add('hidden');
+        }
+
+        // Initialize app when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            updateLanguageDisplay();
+        });
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'998e98872540becb',t:'MTc2MjIwMTQ3My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
